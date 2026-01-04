@@ -5,7 +5,7 @@
 /save_mask
 /save_test
 /checkpoints
-/parameters
+# /parameters
 
 # 数据文件
 *.csv
