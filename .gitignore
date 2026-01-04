@@ -5,6 +5,7 @@
 /save_mask
 /save_test
 /checkpoints
+/plot
 # /parameters
 
 # 数据文件
