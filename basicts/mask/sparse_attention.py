@@ -27,7 +27,8 @@ class GraphAnchorSelector(nn.Module):
         anchor_count = max(self.min_anchors, int(math.ceil(p * self.anchor_ratio)))
         anchor_count = min(anchor_count, p)
         importance = adp.mean(dim=0)
-        scores = torch.einsum('bnpd,n->bpd', patches.norm(dim=-1), importance)
+        # patches.norm(dim=-1) shape: (b, n, p), importance shape: (n,)
+        scores = torch.einsum('bnp,n->bp', patches.norm(dim=-1), importance)
         topk = scores.topk(anchor_count, dim=1).indices
         anchors = []
         for batch_idx in range(b):

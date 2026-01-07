@@ -54,7 +54,9 @@ class GraphWaveNet(nn.Module):
         Ref Official Code: https://github.com/nnzhan/Graph-WaveNet/blob/master/model.py
     """
 
-    def __init__(self, num_nodes, supports, dropout=0.3, gcn_bool=True, addaptadj=True, aptinit=None, in_dim=2,out_dim=12,residual_channels=32,dilation_channels=32,skip_channels=256,end_channels=512,kernel_size=2,blocks=4,layers=2, **kwargs):
+    def __init__(self, num_nodes, supports, dropout=0.3, gcn_bool=True, 
+                 addaptadj=True, aptinit=None, in_dim=2,out_dim=12,residual_channels=32,dilation_channels=32,
+                 skip_channels=256,end_channels=512,kernel_size=2,blocks=4,layers=2, **kwargs):
 
         super(GraphWaveNet, self).__init__()
         self.dropout = dropout

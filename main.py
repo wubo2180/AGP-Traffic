@@ -29,7 +29,7 @@ def set_seed(seed=0):
 
 def get_device(args):
     return torch.device(f"cuda:{args.device}" if torch.cuda.is_available() else "cpu")
-
+    
 def get_dataloader(dataset_class, dataset_dir, dataset_index_dir, mode, seq_len, batch_size, num_workers=8, shuffle=False):
     dataset = dataset_class(dataset_dir, dataset_index_dir, mode, seq_len)
     return DataLoader(dataset, batch_size=batch_size, num_workers=num_workers, shuffle=shuffle)
@@ -153,7 +153,10 @@ def pretrain(config, args):
             _, history_data = data
             history_data = select_input_features(history_data, config['forward_features']).to(config['device'])
             
-            reconstruction_masked_tokens, label_masked_tokens, sparsity_loss = model(history_data, epoch)
+            outputs = model(history_data, epoch)
+            reconstruction_masked_tokens = outputs['reconstruction']
+            label_masked_tokens = outputs['labels']
+            sparsity_loss = outputs['sparsity_loss']
             main_loss = metric_forward(lossType, [reconstruction_masked_tokens, label_masked_tokens])
             loss = main_loss + sparsity_loss
             optimizer.zero_grad()
@@ -199,9 +202,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='PyTorch Training')
     parser.add_argument('--config', default='./parameters/PEMS03.yaml', type=str)
     parser.add_argument('--device', default=0, type=int)
-    parser.add_argument('--preTrain', default='false', type=str)
+    parser.add_argument('--preTrain', default='true', type=str)
     parser.add_argument('--lossType', default='mae', type=str)
-    parser.add_argument('--preTrain_batch_size', default=32, type=int)
+    parser.add_argument('--preTrain_batch_size', default=8, type=int)
     parser.add_argument('--batch_size', default=64, type=int)
     parser.add_argument('--pretrain_epochs', default=100, type=int)
     parser.add_argument('--finetune_epochs', default=100, type=int)
